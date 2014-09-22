@@ -14,12 +14,15 @@ hs_err_pid*
 # project
 .classpath
 .project
+.pydevproject
 
 # bin
 bin
 
 # data
 Homework 1 Data
+data
 
 # results
 Results
+results
