@@ -1,20 +1,20 @@
-class IndexHash(object):
+class SeedIndexHash(object):
     
-    def __init__(self, t, ln, ival=1):
-        """ Create index, extracting substrings of length 'ln' """
+    def __init__(self, t, seed):
+        """ Create index, extracting subsequences based on seed """
         self.t = t
-        self.ln = ln
-        self.ival = ival
+        self.seed = seed
         self.index = {}
+        ln = len(seed)
         for i in range(0, len(t)-ln+1):
-            substr = t[i:i+ln]
-            if substr in self.index:
-                self.index[substr].append(i) # substring already in dictionary
+            subseq = ''.join([t[i+si] for si in range(ln) if seed[si]=='1'])
+            if subseq in self.index:
+                self.index[subseq].append(i) # subseq already in dictionary
             else:
-                self.index[substr] = [i] # add to dictionary
+                self.index[subseq] = [i] # add to dictionary
     def query(self, p):
         """ Return candidate alignments for p """
-        return self.index.get(p[:self.ln], [])
+        return self.index.get(p, [])
 
 def hamm(s1, s2):
     ''' returns hamming distance between two strings'''
@@ -30,8 +30,7 @@ def hamm(s1, s2):
 
 
 # Set working directory to work in eclipse
-#workDir = '/home/ashis/work/github/courses/JHU_Computational_Genomics/HW2'
-workDir = '/Users/ashis/Desktop/work/github/courses/JHU_Computational_Genomics/HW2'
+workDir = '/home/ashis/work/github/courses/JHU_Computational_Genomics/HW2'
 import os
 os.chdir(workDir)
 
@@ -42,26 +41,28 @@ with open(inputPath, 'r') as fh:
 lenT = len(T)
 
 # create inverted index hash
-L = 6   # length of substr
-ih = IndexHash(T, L)
+seed = '10101010101'
+ih = SeedIndexHash(T, seed)
 
 #P = 'achievements'
 #P = 'acquaintance'
 P = 'remembrances'
 
-p1 = P[0:L]
-p2 = P[L:2*L]
+n = len(P)
+
+p1 = ''.join([P[i] for i in range(0,len(P),2)])
+p2 = ''.join([P[i] for i in range(1,len(P),2)])
 
 p1_idx = ih.query(p1)
 p2_idx = ih.query(p2)
 
 
-hamm1 = [(idx, hamm(T[idx+L:idx+2*L], p2))
+hamm1 = [(idx, hamm(T[idx:idx+n], P))
          for idx in p1_idx 
-         if idx <= lenT-2*L]
-hamm2 = [(idx-L, hamm(T[idx-L:idx], p1)) 
+         if idx <= lenT-n]
+hamm2 = [(idx-1, hamm(T[idx-1:idx-1+n], P)) 
          for idx in p2_idx
-         if idx >= L]
+         if idx >= 1]
 
 exactMatchIdx1 = [idx for (idx, d) in hamm1 if d==0]
 exactMatchIdx2 = [idx for (idx, d) in hamm2 if d==0]

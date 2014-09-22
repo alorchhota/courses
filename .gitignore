@@ -15,7 +15,7 @@ hs_err_pid*
 .classpath
 .project
 .pydevproject
-
+.DS_Store
 # bin
 bin
 
