@@ -1,3 +1,15 @@
+def hamm(s1, s2):
+    ''' returns hamming distance between two strings'''
+    l1 = len(s1)
+    l2 = len(s2)
+    #
+    if l1 != l2:
+        raise RuntimeError('unequal length!')
+    #
+    mismatch = [s1[i]!=s2[i] for i in range(l1)]
+    d = sum(mismatch)
+    return d
+
 class SpacedSeedIndexHash(object):
     
     def __init__(self, t, seed):
@@ -20,22 +32,31 @@ class Aligner(object):
     def __init__(self, t,seed):
         self.seed = seed
         self.indexHash = SpacedSeedIndexHash(t,seed)
-        self.indexLen = seed.count('1')
     def find(self, P, maxMismatch = 0):
-        # divide p
-        return 0 
-        
-def hamm(s1, s2):
-    ''' returns hamming distance between two strings'''
-    l1 = len(s1)
-    l2 = len(s2)
-    #
-    if l1 != l2:
-        raise RuntimeError('unequal length!')
-    #
-    mismatch = [s1[i]!=s2[i] for i in range(l1)]
-    d = sum(mismatch)
-    return d
+        # split p
+        n = len(self.indexHash.seed)
+        n_split = maxMismatch+1
+        splits = []
+        for i in range(0,n_split):
+            splits.append(P[i*n:(i+1)*n])
+        #
+        lenT = len(self.indexHash.t)
+        lenP = len(P)
+        #
+        distinctMatchIndexes = set()
+        for si in range(0,n_split):
+            p = splits[si]
+            p_idx = self.indexHash.query(p)
+            #
+            hamm_p = [(idx-si*n, hamm(self.indexHash.t[idx-si*n:idx-si*n+lenP], P))
+                     for idx in p_idx 
+                     if idx-si*n >= 0 and idx-si*n+lenP <= lenT]
+            #
+            matchIdx = [idx for (idx, d) in hamm_p if d<=maxMismatch]
+            for idx in matchIdx:
+                distinctMatchIndexes.add(idx)
+        #
+        return distinctMatchIndexes 
 
 
 # Set working directory to work in eclipse
@@ -50,44 +71,16 @@ with open(inputPath, 'r') as fh:
 lenT = len(T)
 
 # create inverted index hash
-seed = '10101010101'
-ih = SeedIndexHash(T, seed)
-
+#seed = '111111111111111111111111111111'
+seed = '111111'
+al = Aligner(T, seed)
 #P = 'achievements'
 #P = 'acquaintance'
-P = 'remembrances'
+P = 'Semembrances'
+maxMismatch = 1
+matchIdx = al.find(P, maxMismatch)
+lenP = len(P)
+hamm_dist = [hamm(T[idx:idx+lenP], P) for idx in matchIdx]
+print('Exact Match: ' + str(hamm_dist.count(0)))
+print('1 Mismatch: ' + str(hamm_dist.count(1)))
 
-n = len(P)
-
-p1 = ''.join([P[i] for i in range(0,len(P),2)])
-p2 = ''.join([P[i] for i in range(1,len(P),2)])
-
-p1_idx = ih.query(p1)
-p2_idx = ih.query(p2)
-
-
-hamm1 = [(idx, hamm(T[idx:idx+n], P))
-         for idx in p1_idx 
-         if idx <= lenT-n]
-hamm2 = [(idx-1, hamm(T[idx-1:idx-1+n], P)) 
-         for idx in p2_idx
-         if idx >= 1]
-
-exactMatchIdx1 = [idx for (idx, d) in hamm1 if d==0]
-exactMatchIdx2 = [idx for (idx, d) in hamm2 if d==0]
-distinctMatchIndexes = set(exactMatchIdx1 + exactMatchIdx2)
-
-approxMatchIdx1 = [idx for (idx, d) in hamm1 if d<=1]
-approxMatchIdx2 = [idx for (idx, d) in hamm2 if d<=1]
-distinctApproxMatchIndexes = set(approxMatchIdx1 + approxMatchIdx2)
-
-numExactMatch = len(distinctMatchIndexes)
-numApproxMatch = len(distinctApproxMatchIndexes)
-num1Mismatch = numApproxMatch - numExactMatch
-
-numComparisons = len(p1_idx) + len(p2_idx)
-specificity = (numApproxMatch + 0.0) / numComparisons
-
-print(numExactMatch)
-print(num1Mismatch)
-print(specificity)
