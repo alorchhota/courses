@@ -1,4 +1,4 @@
-class SeedIndexHash(object):
+class SpacedSeedIndexHash(object):
     
     def __init__(self, t, seed):
         """ Create index, extracting subsequences based on seed """
@@ -16,6 +16,15 @@ class SeedIndexHash(object):
         """ Return candidate alignments for p """
         return self.index.get(p, [])
 
+class Aligner(object):
+    def __init__(self, t,seed):
+        self.seed = seed
+        self.indexHash = SpacedSeedIndexHash(t,seed)
+        self.indexLen = seed.count('1')
+    def find(self, P, maxMismatch = 0):
+        # divide p
+        return 0 
+        
 def hamm(s1, s2):
     ''' returns hamming distance between two strings'''
     l1 = len(s1)
