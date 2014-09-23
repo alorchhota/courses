@@ -64,23 +64,73 @@ workDir = '/home/ashis/work/github/courses/JHU_Computational_Genomics/HW2'
 import os
 os.chdir(workDir)
 
-# inputs
-inputPath = 'data/complete_works.txt'
-with open(inputPath, 'r') as fh:
-    T = fh.read()
-lenT = len(T)
+# # inputs
+# inputPath = 'data/complete_works.txt'
+# with open(inputPath, 'r') as fh:
+#     T = fh.read()
+# lenT = len(T)
+# 
+# # create inverted index hash
+# #seed = '111111111111111111111111111111'
+# seed = '111111'
+# al = Aligner(T, seed)
+# #P = 'achievements'
+# #P = 'acquaintance'
+# P = 'Semembrances'
+# maxMismatch = 1
+# matchIdx = al.find(P, maxMismatch)
+# lenP = len(P)
+# hamm_dist = [hamm(T[idx:idx+lenP], P) for idx in matchIdx]
+# print('Exact Match: ' + str(hamm_dist.count(0)))
+# print('1 Mismatch: ' + str(hamm_dist.count(1)))
 
-# create inverted index hash
-#seed = '111111111111111111111111111111'
-seed = '111111'
-al = Aligner(T, seed)
-#P = 'achievements'
-#P = 'acquaintance'
-P = 'Semembrances'
-maxMismatch = 1
-matchIdx = al.find(P, maxMismatch)
-lenP = len(P)
-hamm_dist = [hamm(T[idx:idx+lenP], P) for idx in matchIdx]
-print('Exact Match: ' + str(hamm_dist.count(0)))
-print('1 Mismatch: ' + str(hamm_dist.count(1)))
+# copied from http://nbviewer.ipython.org/gist/BenLangmead/8376306
+def parse_fastq(fh):
+    """ Parse reads from a FASTQ filehandle.  For each read, we
+        return a name, nucleotide-string, quality-string triple. """
+    reads = []
+    while True:
+        first_line = fh.readline()
+        if len(first_line) == 0:
+            break  # end of file
+        name = first_line[1:].rstrip()
+        seq = fh.readline().rstrip()
+        fh.readline()  # ignore line starting with +
+        qual = fh.readline().rstrip()
+        reads.append((name, seq, qual))
+    return reads
 
+def parse_fasta(fh):
+    ''' 
+    parse a fasta file.
+    return the dna string.
+    '''
+    lines = fh.readlines()
+    t = ''.join([l.strip() for l in lines if not l.startswith('>')])
+    return t
+
+## read inputs
+fastaInputPath = 'data/phix.fa.txt'
+fastqInputPath = 'data/phix_reads.fastq.txt'
+
+with open(fastaInputPath, 'r') as fh:
+    dna = parse_fasta(fh)
+
+with open(fastqInputPath, 'r') as fh:
+    reads = parse_fastq(fh)
+
+seed = '1' * 30
+al = Aligner(dna, seed)
+maxMismatch = 4
+
+best_distances = []
+for r in reads:
+    read = r[1]
+    matchIdx = al.find(read, maxMismatch)
+    lenR = len(read)
+    hamm_dist = [hamm(dna[idx:idx+lenR], read) for idx in matchIdx]
+    best_dist = min(hamm_dist) if len(hamm_dist) != 0 else maxMismatch+1
+    best_distances.append(best_dist)
+    
+counts = [best_distances.count(c) for c in range(5)]
+print(counts)
