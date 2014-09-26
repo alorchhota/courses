@@ -1,7 +1,7 @@
 import sys
 import os
 
-if __name__ == 'main':
+if __name__ == '__main__':
     print(sys.argv)
     fastaInputPath = sys.argv[1]
     fastqInputPath = sys.argv[2]

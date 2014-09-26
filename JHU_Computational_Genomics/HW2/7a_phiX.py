@@ -1,3 +1,17 @@
+import sys
+import os
+
+if __name__ == '__main__':
+    print(sys.argv)
+    fastaInputPath = sys.argv[1]
+    fastqInputPath = sys.argv[2]
+else:
+    #workDir = '/home/ashis/work/github/courses/JHU_Computational_Genomics/HW2'
+    #os.chdir(workDir)
+    fastaInputPath = 'data/phix.fa.txt'
+    fastqInputPath = 'data/phix_reads.fastq.txt'
+
+
 def hamm(s1, s2):
     ''' returns hamming distance between two strings'''
     l1 = len(s1)
@@ -59,30 +73,6 @@ class Aligner(object):
         return distinctMatchIndexes 
 
 
-# Set working directory to work in eclipse
-workDir = '/home/ashis/work/github/courses/JHU_Computational_Genomics/HW2'
-import os
-os.chdir(workDir)
-
-# # inputs
-# inputPath = 'data/complete_works.txt'
-# with open(inputPath, 'r') as fh:
-#     T = fh.read()
-# lenT = len(T)
-# 
-# # create inverted index hash
-# #seed = '111111111111111111111111111111'
-# seed = '111111'
-# al = Aligner(T, seed)
-# #P = 'achievements'
-# #P = 'acquaintance'
-# P = 'Semembrances'
-# maxMismatch = 1
-# matchIdx = al.find(P, maxMismatch)
-# lenP = len(P)
-# hamm_dist = [hamm(T[idx:idx+lenP], P) for idx in matchIdx]
-# print('Exact Match: ' + str(hamm_dist.count(0)))
-# print('1 Mismatch: ' + str(hamm_dist.count(1)))
 
 # copied from http://nbviewer.ipython.org/gist/BenLangmead/8376306
 def parse_fastq(fh):
@@ -110,9 +100,6 @@ def parse_fasta(fh):
     return t
 
 ## read inputs
-fastaInputPath = 'data/phix.fa.txt'
-fastqInputPath = 'data/phix_reads.fastq.txt'
-
 with open(fastaInputPath, 'r') as fh:
     dna = parse_fasta(fh)
 
