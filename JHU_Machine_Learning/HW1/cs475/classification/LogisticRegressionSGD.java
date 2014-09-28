@@ -72,7 +72,7 @@ public class LogisticRegressionSGD extends Predictor{
 			sum_f2[i] = 0;
 		}
 		
-		for(int iter=0; iter < this._iter; iter++){
+		for(int iter=0; iter < this._iter * N; iter++){
 			Instance curInstance = instances.get(iter%N);
 			
 			// extract y from sample
@@ -111,12 +111,12 @@ public class LogisticRegressionSGD extends Predictor{
 				w[d] = w[d] + eta[d] * dl[d];
 			}
 			
-			// print w
-			System.out.print("Iteration#" + (iter+1) + ":\t");
-			for(int d=0; d<this.D; d++){
-				System.out.print(this._fmt.format(w[d]) + "\t");
-			}
-			System.out.println();
+//			// print w
+//			System.out.print("Iteration#" + (iter+1) + ":\t");
+//			for(int d=0; d<this.D; d++){
+//				System.out.print(this._fmt.format(w[d]) + "\t");
+//			}
+//			System.out.println();
 		}
 		
 		// save weights of the model
@@ -124,9 +124,9 @@ public class LogisticRegressionSGD extends Predictor{
 		for(int d=0; d<this.D; d++)
 			this._w[d] = w[d];
 		
-		for(int d=0; d<this.D; d++)
-			System.out.print(this._fmt.format(w[d]) + "\t");
-		System.out.println();
+//		for(int d=0; d<this.D; d++)
+//			System.out.print(this._fmt.format(w[d]) + "\t");
+//		System.out.println();
 	}
 
 	@Override
@@ -135,11 +135,12 @@ public class LogisticRegressionSGD extends Predictor{
 			return null;
 		
 		// extract x from sample
-		double[] x = new double[D];
+		double[] x = new double[this.D];
 		FeatureVector fv = instance.getFeatureVector();
 		Set<Integer> fIndexes = fv.getFeatureIndexes();
 		for(int fi : fIndexes){
-			x[fi-1] = fv.get(fi);	// feature index is 1-based
+			if(fi <= this.D)
+				x[fi-1] = fv.get(fi);	// feature index is 1-based
 		}
 		
 		// y = g(wx)
@@ -151,7 +152,7 @@ public class LogisticRegressionSGD extends Predictor{
 		double y = g(wx);
 		int l =  y>=0.5 ? 1 : 0;
 		
-		System.out.println(l + "\t" + wx);
+		//System.out.println(l + "\t" + wx);
 		
 		return new ClassificationLabel(l);
 	}
