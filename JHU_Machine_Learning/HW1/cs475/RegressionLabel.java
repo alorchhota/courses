@@ -12,6 +12,10 @@ public class RegressionLabel extends Label implements Serializable {
 		// TODO Auto-generated constructor stub
 		this._label = label;
 	}
+	
+	public double getValue(){
+		return this._label;
+	}
 
 	@Override
 	public String toString() {

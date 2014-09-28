@@ -15,6 +15,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 import cs475.classification.EvenOddPredictor;
+import cs475.classification.LogisticRegressionSGD;
 import cs475.classification.MajorityPredictor;
 
 public class Classify {
@@ -80,6 +81,19 @@ public class Classify {
 			EvenOddPredictor evenOddPred = new EvenOddPredictor();
 			evenOddPred.train(instances);
 			return evenOddPred;
+		case "logistic_regression":
+			// generate initial values
+			int sgd_iterations = 20;
+			if (CommandLineUtilities.hasArg("sgd_iterations"))
+				sgd_iterations = CommandLineUtilities.getOptionValueAsInt("sgd_iterations");
+			
+			double sgd_eta0 = 1.0;
+			if (CommandLineUtilities.hasArg("sgd_eta0"))
+				sgd_eta0 = CommandLineUtilities.getOptionValueAsFloat("sgd_eta0");
+			
+			LogisticRegressionSGD lr = new LogisticRegressionSGD(sgd_iterations, sgd_eta0);
+			lr.train(instances);
+			return lr;
 		default:
 			throw new IllegalArgumentException("No implementation for '" + algorithm + "' algorithm. Please check the algorithm argument.");
 		}
@@ -94,7 +108,7 @@ public class Classify {
 		if(instances.size()>0 && instances.get(0).getLabel() != null){
 			AccuracyEvaluator evaluator = new AccuracyEvaluator();
 			double accuracy = evaluator.evaluate(instances, predictor);
-			//System.out.println("Accuracy: " + accuracy);
+			System.out.println("Accuracy: " + accuracy);
 		}
 		
 		// save the predictions
@@ -155,6 +169,9 @@ public class Classify {
 		registerOption("predictions_file", "String", true, "The predictions file to create.");
 		registerOption("algorithm", "String", true, "The name of the algorithm for training.");
 		registerOption("model_file", "String", true, "The name of the model file to create/load.");
+		
+		registerOption("sgd_eta0", "double", true, "The constant scalar for learning rate in AdaGrad.");
+		registerOption("sgd_iterations", "int", true, "The number of SGD iterations.");
 		
 		// Other options will be added here.
 	}

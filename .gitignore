@@ -19,6 +19,9 @@ hs_err_pid*
 # bin
 bin
 
+#debug
+debug
+
 # data
 Homework 1 Data
 data

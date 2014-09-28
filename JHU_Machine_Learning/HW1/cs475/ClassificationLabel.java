@@ -12,6 +12,10 @@ public class ClassificationLabel extends Label implements Serializable {
 		// TODO Auto-generated constructor stub
 		this._label = label;
 	}
+	
+	public int getValue(){
+		return this._label;
+	}
 
 	@Override
 	public String toString() {
