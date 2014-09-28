@@ -72,6 +72,9 @@ public class LogisticRegressionSGD extends Predictor{
 			sum_f2[i] = 0;
 		}
 		
+		//System.out.println(D);
+		double[] dl = new double[this.D];
+		
 		for(int iter=0; iter < this._iter * N; iter++){
 			Instance curInstance = instances.get(iter%N);
 			
@@ -86,37 +89,26 @@ public class LogisticRegressionSGD extends Predictor{
 				x[fi-1] = fv.get(fi);	// feature index is 1-based
 			}
 			
-			// calculate gradient of likelihood for each dimension
-			double[] dl = new double[this.D];
+			
 			double wx = 0;
 			for(int d=0; d<this.D; d++){
 				wx += w[d]*x[d];
 			}
+			
 			for(int d=0; d<this.D; d++){
+				// calculate gradient of likelihood for each dimension
 				dl[d] = y * g(-wx) * x[d] + (1-y) * g(wx) * (-x[d]);
-			}
-			
-			// update sum_f2
-			for(int d=0; d<this.D; d++){
+				
+				// update sum_f2
 				sum_f2[d] = sum_f2[d] + dl[d]*dl[d];
-			}
-			
-			// update eta
-			for(int d=0; d<this.D; d++){
+				
+				// update eta
 				eta[d] = this._eta0 / (Math.sqrt(I[d] + sum_f2[d]));
-			}
-			
-			// update w
-			for(int d=0; d<this.D; d++){
+				
+				// update w
 				w[d] = w[d] + eta[d] * dl[d];
 			}
 			
-//			// print w
-//			System.out.print("Iteration#" + (iter+1) + ":\t");
-//			for(int d=0; d<this.D; d++){
-//				System.out.print(this._fmt.format(w[d]) + "\t");
-//			}
-//			System.out.println();
 		}
 		
 		// save weights of the model
