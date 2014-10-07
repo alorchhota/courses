@@ -17,6 +17,7 @@ import org.apache.commons.cli.OptionBuilder;
 import cs475.classification.EvenOddPredictor;
 import cs475.classification.LogisticRegressionSGD;
 import cs475.classification.MajorityPredictor;
+import cs475.classification.Pegasos;
 
 public class Classify {
 	static public LinkedList<Option> options = new LinkedList<Option>();
@@ -72,6 +73,20 @@ public class Classify {
 	private static Predictor train(List<Instance> instances, String algorithm) {
 		// TODO Train the model using "algorithm" on "data"
 		// TODO Evaluate the model
+		
+		// generate initial values
+		int sgd_iterations = 20;
+		if (CommandLineUtilities.hasArg("sgd_iterations"))
+			sgd_iterations = CommandLineUtilities.getOptionValueAsInt("sgd_iterations");
+		
+		double sgd_eta0 = 1.0;
+		if (CommandLineUtilities.hasArg("sgd_eta0"))
+			sgd_eta0 = CommandLineUtilities.getOptionValueAsFloat("sgd_eta0");
+		
+		double pegasos_lambda = 1e-4;
+		if (CommandLineUtilities.hasArg("pegasos_lambda"))
+			pegasos_lambda = CommandLineUtilities.getOptionValueAsFloat("pegasos_lambda");
+		
 		switch(algorithm.toLowerCase()){
 		case "majority":
 			MajorityPredictor pred = new MajorityPredictor();
@@ -82,18 +97,13 @@ public class Classify {
 			evenOddPred.train(instances);
 			return evenOddPred;
 		case "logistic_regression":
-			// generate initial values
-			int sgd_iterations = 20;
-			if (CommandLineUtilities.hasArg("sgd_iterations"))
-				sgd_iterations = CommandLineUtilities.getOptionValueAsInt("sgd_iterations");
-			
-			double sgd_eta0 = 1.0;
-			if (CommandLineUtilities.hasArg("sgd_eta0"))
-				sgd_eta0 = CommandLineUtilities.getOptionValueAsFloat("sgd_eta0");
-			
 			LogisticRegressionSGD lr = new LogisticRegressionSGD(sgd_iterations, sgd_eta0);
 			lr.train(instances);
 			return lr;
+		case "pegasos":
+			Pegasos pegasos = new Pegasos(sgd_iterations, pegasos_lambda);
+			pegasos.train(instances);
+			return pegasos;
 		default:
 			throw new IllegalArgumentException("No implementation for '" + algorithm + "' algorithm. Please check the algorithm argument.");
 		}
@@ -106,9 +116,9 @@ public class Classify {
 		
 		// TODO Evaluate the model if labels are available. 
 		if(instances.size()>0 && instances.get(0).getLabel() != null){
-			AccuracyEvaluator evaluator = new AccuracyEvaluator();
-			double accuracy = evaluator.evaluate(instances, predictor);
-			System.out.println("Accuracy: " + accuracy);
+			//AccuracyEvaluator evaluator = new AccuracyEvaluator();
+			//double accuracy = evaluator.evaluate(instances, predictor);
+			//System.out.println("Accuracy: " + accuracy);
 		}
 		
 		// save the predictions
@@ -172,7 +182,7 @@ public class Classify {
 		
 		registerOption("sgd_eta0", "double", true, "The constant scalar for learning rate in AdaGrad.");
 		registerOption("sgd_iterations", "int", true, "The number of SGD iterations.");
-		
+		registerOption("pegasos_lambda", "double", true, "The regularization parameter for Pegasos.");
 		// Other options will be added here.
 	}
 }
