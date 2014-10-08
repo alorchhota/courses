@@ -5,7 +5,10 @@ import re
 if __name__ == '__main__':
     #print(sys.argv)
     inFile = sys.stdin
-    codonMapFile = sys.argv[1]
+    if len(sys.argv) < 2:
+        codonMapFile = 'inputs/rna-codon.txt'
+    else:
+        codonMapFile = sys.argv[1]
 else:
     workDir = '/home/ashis/work/github/courses/JHU_Computational_Genomics/HW3'
     os.chdir(workDir)
