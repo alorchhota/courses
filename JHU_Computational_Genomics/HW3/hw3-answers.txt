@@ -18,7 +18,7 @@ Step-2: create a suffix tree of S.
 
 Step-3: results = []
         for each string str_i in the collection:
-            Traverse the suffix tree for str_i#.
+            Traverse the suffix tree for str_i.
             If we reach a non-leaf-node:
                 results.append(str_i)
 
@@ -29,7 +29,7 @@ Step-1: Create a sting of length n+k+1 in O(n+k) time.
 
 Step-2: We can build a suffix tree of a string of size n+k+1, in O (n+k) time.
 
-Step-3: Every traversal takes O(|str_i|+1) time. So, all traversal takes a total of O(n+k) time.
+Step-3: Every traversal takes O(|str_i|) time. And checking we reached a leaf node and saving the string take O(1) times. So, the entire loop takes a total of O(n+k) time.
 
 Thus, the overall time complexity is O(n+k)
 
