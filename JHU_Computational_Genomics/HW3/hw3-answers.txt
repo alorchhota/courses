@@ -1,0 +1,67 @@
+7-a) Please see the file: 7a_suffix_tree.png.
+
+7-b) Suffix array: 7, 3, 4, 6, 5, 0 , 1, 2.
+
+7-c) LCP1: 0, 1, 0, 1, 0, 1, 0
+
+7-d) BWT: ctaca$gg
+
+=====================================
+
+8) Algorithm:
+
+Step-1: create a string concateting all the strings with a separator #, where # does not appear in any of the strings.
+
+        S = str_1#str_2#str_3#...#str_k#$.
+
+Step-2: create a suffix tree of S.
+
+Step-3: results = []
+        for each string str_i in the collection:
+            Traverse the suffix tree for str_i#.
+            If we reach a non-leaf-node:
+                results.append(str_i)
+
+
+Time Complexity:
+
+Step-1: Create a sting of length n+k+1 in O(n+k) time.
+
+Step-2: We can build a suffix tree of a string of size n+k+1, in O (n+k) time.
+
+Step-3: Every traversal takes O(|str_i|+1) time. So, all traversal takes a total of O(n+k) time.
+
+Thus, the overall time complexity is O(n+k)
+
+==================================
+
+
+9) If every character in T is unique (or no character occurs more than once in T), then the suffix tree would contain |T|+2 nodes.
+ 
+===================================
+
+10-a) Sort the last column. This is the first column.
+
+10-b) Yes. Just sort the column.
+
+10-c) Yes. Just sort the row.
+
+
+===================================
+
+11-a) T0 A2 G0 A1 C0 A0 $.
+
+11-b) The row index of the first column of BWM can be easily calculated using B-ranking. It can be done in costant time if the total number of characters before the first occurence of every character is pre-calculated. Thus, LF mapping can be done in constant time using B-ranking.
+
+
+
+===================================
+
+12-a) Yes, the hamming distance can be less than n. The mutation loop is running n times. In each iteration of loop, hamming distance can be increased by at most 1. However, if the randomization picks the same nucelotide as it was in the randomly selected position, hamming distance does not increase. Thus total hamming distance becomes less than n. In another situation, if the same random position is selected multiple times, hamming distance would be less than n.
+
+12-b) Yes. In each iteration of loop, hamming distance can be increased by at most 1. So, if each iteration selects a different random position, and the selected nucleotide is different from the initial nucleotide at that position, then the hamming distance can be n.
+
+
+12-c) No. In each iteration of loop, hamming distance can be increased by at most 1. Thus n iteration can create at best a hamming distance of n.
+
+
