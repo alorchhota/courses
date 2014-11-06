@@ -1,0 +1,21 @@
+Problem-1
+========== 
+In the given input, 'to_every_thing_turn_turn_turn_there_is_a_season', there is one long repeat R='_turn_turn_turn_t'. Here '_turn' is fully repeated 3 times, which is followed a prefix ('_t') of '_turn'. Because of additional '_t' at the end, every 8-mer of R occurs more than once, and we cannot build the original text. However, if you use 9-mers, then there will be one 9-mer 'n_turn_tu' is occurs only once. So, using length-9-substrings will fix the porblem.
+
+Problem-2
+==========
+
+2-a) Please see the file - debruijn-2(a).png.
+
+2-b) This graph has more than 2 semi-balanced nodes (AB, CD, EF, GC, DH, IJ). So, this graph is not eulerian.
+
+2-c) 3-nodes walk: BC -> CD -> DH.
+
+
+Problem-3
+=========
+String: BCDBCEBCFBCBCB. 
+Please see the corresponding DeBruijn graph in the file debruijn-3.png.
+
+
+

@@ -1,0 +1,34 @@
+prob-2(a)
+=========
+digraph g{
+  AB -> BC [label="1"]
+  BC -> CD [label="1"]
+  CD -> DE [label="2"]
+   DE -> EF [label="2"]
+   EF -> FG [label="3"]
+   FG -> GC [label="3"]
+   GC ->  CD [label="2"]
+   CD -> DH [label="2"]
+   DH -> HI [label="1"]
+   HI -> IJ [label="1"]
+ }
+ 
+ 
+prob-3
+=======
+digraph g{
+  BC -> CD
+  CD -> DB
+  DB -> BC
+  BC -> CB
+  CB -> BC
+  BC -> CE
+  CE -> EB
+  EB -> BC
+  BC -> CF
+  CF -> FB
+  FB -> BC
+  BC -> CB
+ }
+
+website: http://graphviz-dev.appspot.com/
