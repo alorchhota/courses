@@ -228,6 +228,8 @@ def genomeOfUnitig(utig):
     return gen
 
 utigGenomes = [genomeOfUnitig(utig) for utig in unitigs]
+# sort utigGenomes for reproducibility
+utigGenomes.sort(key=lambda x: len(x))
 
 ### explore pairwise suffix-prefix match length
 ### and use pairs with long matches.
@@ -237,13 +239,13 @@ pairwiseSuffixPrefixMatch.sort(key=lambda x: x[2], reverse=True)
 
 # the longest matches are as follows:
 # utig1 - utig2 - overlap
-#   1   -   2   - 99
-#   3   -   2   - 99
-#   2   -   0   - 98
-#   2   -   1   - 98
-# So, the unitigis are ordered as (3-2-1-2-0) in the final genome.
+#   1   -   0   - 99
+#   2   -   0   - 99
+#   0   -   2   - 98
+#   0   -   3   - 98
+# So, the unitigis are ordered as (1-0-2-0-3) in the final genome.
 
-genome = utigGenomes[3] + utigGenomes[2][99:] + utigGenomes[1][98:] + utigGenomes[2][99:] + utigGenomes[0][98:] 
+genome = utigGenomes[1] + utigGenomes[0][99:] + utigGenomes[2][98:] + utigGenomes[0][99:] + utigGenomes[3][98:] 
 
 #print(len(genome))
 
@@ -258,6 +260,9 @@ def write_solution(genome, per_line=60, out=sys.stdout):
         out.write(line + '\n')
 
 write_solution(genome, per_line=60, out=genomeOutFile)
+
+print(len(genome))
+#print([len(g) for g in utigGenomes])
 
 genomeOutFile.close()
 
