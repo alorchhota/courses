@@ -1,0 +1,3 @@
+a) The 67th row is suspicious. Often, the nucleotide was not identified (not A, C, G, or T). There can have a number of reasons behind this. The template string may be erroneous or contaminated. The sequencing machineries including image capturing machineries may be defective.
+
+b) The number of quality values less than 20 gradually increases from one end to another. Multiple factors may result in this pattern. The sequence may reside towards a terminal of a chromosome. There can also have sequencing bias towards an end.

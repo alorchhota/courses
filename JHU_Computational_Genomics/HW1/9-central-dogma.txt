@@ -1,0 +1,5 @@
+a) Transcription is the process where mRNA is produced from a template DNA string. RNA polymerase binds to promoters in the prsence of transcription factor, then it moves along the dna to create mRNA from template DNA strand.
+
+b) Translation is the process where protein is produced from mRNA. Translation starts at a start codon, then continues creating amino acids and finally stops at a stop codon.
+
+c) The central dogma tells that DNA strand is transcribed into RNA, and then RNA is translated into protein. Here DNA (genotype) works as a template which is fixed in an individual. The expression of gene regulates protein creation. It is protein which perform various functions in organisms, and determine various characteristics in an indvidual. This way, the central dogma explains the link between genotypes and phenotypes.  
