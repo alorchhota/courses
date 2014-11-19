@@ -1,0 +1,33 @@
+digraph g{
+root [label=""]
+
+node_a [label=""]
+root -> node_a [label="a"]
+node_aacc [label="3"]
+node_a -> node_aacc [label="acc$"]
+node_acc [label="4"]
+node_a -> node_acc [label="cc$"]
+
+node_c [label=""]
+root -> node_c [label="c"]
+node_cc [label="5"]
+node_c -> node_cc [label="c$"]
+node_cd [label="6"]
+node_c -> node_cd [label="$"]
+
+node_g [label=""]
+root -> node_g [label="g"]
+node_ggt [label="0"]
+node_g -> node_ggt [label="gtaacc$"]
+node_gta [label="1"]
+node_g -> node_gta [label="taacc$"]
+
+node_t [label="2"]
+root -> node_t [label="taacc$"]
+
+node_d [label="7"]
+root -> node_d [label="$"]
+
+
+   
+}
