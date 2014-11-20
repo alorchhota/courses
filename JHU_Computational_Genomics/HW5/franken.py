@@ -204,3 +204,53 @@ class HMM(object):
         p = ''.join(map(lambda x: self.Q[x], p[::-1]))
         return omx, p # Return log probability and path
 
+# inputs config
+train_data_fn = 'data/trainingData1.txt'
+test_data_fn = 'data/testData1.txt'
+genome_fn = 'data/frankengene1.fasta.txt'
+
+# define transition, emission and initial matrix
+alphabets = ['A','C','G','T']
+states = ['0','1']
+transition = { s1+s2:0 for s2 in states for s1 in states}
+emission = { s1+s2:0 for s2 in alphabets for s1 in states}
+initial = { s1:1.0/len(states) for s1 in states}
+nucleotides = {s1:0 for s1 in alphabets}
+
+# read genome and update matrices count
+gt = read_genome_and_training(genome_fn, train_data_fn)
+pairs = pairwise(gt)
+for pair in pairs:
+    tr = pair[0][1] + pair[1][1]
+    em = pair[0][1] + pair[0][0]
+    transition[tr] += 1
+    emission[em] += 1
+    #print(tr + ' ' + em)
+
+# the last emission
+em = pair[0][1] + pair[0][0]
+emission[em] += 1
+
+# convert counts to probability
+total_transition = {s1:sum([transition[s1+s2] for s2 in states]) for s1 in states}
+for tr in transition.keys():
+    transition[tr] /= (total_transition[tr[0]]+0.0)
+
+total_emission = {s1:sum([emission[s1+s2] for s2 in alphabets]) for s1 in states}
+for em in emission.keys():
+    emission[em] /= (total_emission[em[0]]+0.0)
+
+
+print(transition)
+print(emission)
+print(initial)
+
+# build HMM
+hmm = HMM(transition, emission, initial)
+
+# predict whole genome
+genome = ''.join(read_fasta_char_by_char(genome_fn))
+_, pred = hmm.viterbiL(genome)
+ev = evaluate_on_test_data(pred,test_data_fn)
+accuracy = ev[0]/(ev[1]+0.0)
+print(accuracy)
