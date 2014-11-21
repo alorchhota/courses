@@ -1,6 +1,17 @@
 from itertools import izip, islice, tee
-import math
+import sys
 import numpy
+
+##### inputs config
+#genome_fn = 'data/frankengene1.fasta.txt'
+#train_data_fn = 'data/trainingData1.txt'
+#prediction_fn = 'results/prediction.txt'
+#test_data_fn = 'data/testData1.txt'
+
+genome_fn = sys.argv[1]
+train_data_fn = sys.argv[2]
+prediction_fn = sys.argv[3]
+test_data_fn = sys.argv[4]
 
 def pairwise(iterable):
     """ Create iterator over adjacent pairs of elements in given
@@ -204,10 +215,6 @@ class HMM(object):
         p = ''.join(map(lambda x: self.Q[x], p[::-1]))
         return omx, p # Return log probability and path
 
-# inputs config
-train_data_fn = 'data/trainingData1.txt'
-test_data_fn = 'data/testData1.txt'
-genome_fn = 'data/frankengene1.fasta.txt'
 
 # define transition, emission and initial matrix
 alphabets = ['A','C','G','T']
@@ -240,10 +247,9 @@ total_emission = {s1:sum([emission[s1+s2] for s2 in alphabets]) for s1 in states
 for em in emission.keys():
     emission[em] /= (total_emission[em[0]]+0.0)
 
-
-print(transition)
-print(emission)
-print(initial)
+#print(transition)
+#print(emission)
+#print(initial)
 
 # build HMM
 hmm = HMM(transition, emission, initial)
@@ -251,6 +257,13 @@ hmm = HMM(transition, emission, initial)
 # predict whole genome
 genome = ''.join(read_fasta_char_by_char(genome_fn))
 _, pred = hmm.viterbiL(genome)
+
+# save prediction
+with open(prediction_fn, 'w') as outFile:
+    outFile.write(pred)
+print('Predictions saved in: ' + prediction_fn)
+
+# evaluate test data
 ev = evaluate_on_test_data(pred,test_data_fn)
 accuracy = ev[0]/(ev[1]+0.0)
-print(accuracy)
+print( 'Accuracy: ' + str(accuracy))

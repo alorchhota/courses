@@ -5,19 +5,12 @@ import csv
 
 
 ########## settings to work in personal computer ########
-if __name__ == '__main__':
-    inFile = sys.stdin
-    #inFile = open('data/rosalind_orf.txt', 'r')
-    if len(sys.argv) < 2:
-        codonMapFile = 'inputs/rna-codon.txt'
-    else:
-        codonMapFile = sys.argv[1]
-else:
-    workDir = '/User/ashis/Desktop/work/github/courses/JHU_Computational_Genomics/HW5'
-    os.chdir(workDir)
-    sys.path.append(os.path.abspath(os.getcwd()))
-    inFile = open('data/orf.txt', 'r')
+inFile = sys.stdin
+#inFile = open('data/rosalind_orf.txt', 'r')
+if len(sys.argv) < 2:
     codonMapFile = 'inputs/rna-codon.txt'
+else:
+    codonMapFile = sys.argv[1]
 
 
 def parse_fasta(fh):
