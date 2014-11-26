@@ -82,3 +82,6 @@ docs/_build/
 
 # metadata
 .metadata
+
+# unix temporary files
+*~
